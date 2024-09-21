@@ -1,0 +1,1 @@
+arn:aws:iam::891377205497:policy/policy_12acc02c
