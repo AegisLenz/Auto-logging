@@ -1,0 +1,6 @@
+{
+    "access_key_id": "YOUR_FIRST_ACCESS_KEY",
+    "secret_access_key": "YOUR_FIRST_SECRET_ACCESS_KEY",
+    "new_access_key_id": "YOUR_SECOND_ACCESS_KEY",
+    "new_secret_access_key": "YOUR_SECOND_SECRET_ACCESS_KEY"
+}
