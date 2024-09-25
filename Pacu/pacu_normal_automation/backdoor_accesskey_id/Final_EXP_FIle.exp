@@ -1,0 +1,16 @@
+#!/usr/bin/expect
+
+# 스크립트 실행
+spawn ./MakeUser.sh
+
+# 정책 파일 이름 입력 대기
+expect "정책을 선택해 주세요(ex create_key_policy.json): "
+send "create_key_policy.json\r"
+
+# MakeUser.sh가 완료될 때까지 대기
+expect eof
+
+spawn ./Make_Second_Key.sh
+
+# 종료 대기
+expect eof
