@@ -15,9 +15,9 @@ aws configure set region us-east-1 --profile $ACCOUNT
 LOG_DIR="./Normal_logs" # 로그 파일 저장 경로
 mkdir -p "$LOG_DIR"
 
-# 시간 범위 설정 (예: 1시간 전부터 현재까지)
-START_TIME=$(date -u -v -1H +"%Y-%m-%dT%H:%M:%SZ")
-END_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+# 시간 범위 설정 (7일 전부터 5일 전까지)
+START_TIME=$(date -u -v -7d +"%Y-%m-%dT%H:%M:%SZ")  # 7일 전
+END_TIME=$(date -u -v -5d +"%Y-%m-%dT%H:%M:%SZ")    # 5일 전
 echo "로그 수집 시작 시간: $START_TIME"
 echo "로그 수집 종료 시간: $END_TIME"
 
@@ -42,13 +42,15 @@ echo "CloudTrail 이벤트 조회 및 저장 중..."
 aws cloudtrail lookup-events \
     --profile $ACCOUNT \
     --region us-east-1 \
+    --lookup-attributes AttributeKey=EventSource,AttributeValue=cloudtrail.amazonaws.com \
+    --lookup-attributes AttributeKey=Username,AttributeValue=$ACCOUNT \
     --start-time "$START_TIME" \
     --end-time "$END_TIME" \
-    --output json > "$LOG_DIR/${ACCOUNT}_cloudtrail_events.json"
+    --output json > "$LOG_DIR/${ACCOUNT}_cloudtrail_stop_events.json"
 
 # 결과 확인
-if [ -s "$LOG_DIR/${ACCOUNT}_cloudtrail_events.json" ]; then
-    echo "JSON 로그 파일 저장됨: $LOG_DIR/${ACCOUNT}_cloudtrail_events.json"
+if [ -s "$LOG_DIR/${ACCOUNT}_cloudtrail_stop_events.json" ]; then
+    echo "JSON 로그 파일 저장됨: $LOG_DIR/${ACCOUNT}_cloudtrail_stop_events.json"
 else
     echo "JSON 로그 파일 생성 안됨. CloudTrail 설정 또는 시간 범위를 확인하세요."
 fi

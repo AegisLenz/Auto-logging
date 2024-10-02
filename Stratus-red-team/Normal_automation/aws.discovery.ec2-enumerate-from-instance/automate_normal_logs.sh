@@ -12,13 +12,12 @@ aws configure set aws_secret_access_key $SECRET_KEY --profile $ACCOUNT
 aws configure set region us-east-1 --profile $ACCOUNT
 
 # 로그 저장 경로 설정
-SCENARIO="aws.execution.ec2-user-data-normal"  # 정상 로그 시나리오 이름
 LOG_DIR="./Normal_logs" # 로그 파일 저장 경로
 mkdir -p "$LOG_DIR"
 
-# 시간 범위 설정 (예: 1시간 전부터 현재까지)
-START_TIME=$(date -u -v -1H +"%Y-%m-%dT%H:%M:%SZ")
-END_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+# 시간 범위 설정 (7일 전부터 5일 전까지)
+START_TIME=$(date -u -v -6d +"%Y-%m-%dT%H:%M:%SZ")  # 7일 전
+END_TIME=$(date -u -v -5d +"%Y-%m-%dT%H:%M:%SZ")    # 5일 전
 echo "로그 수집 시작 시간: $START_TIME"
 echo "로그 수집 종료 시간: $END_TIME"
 
@@ -44,6 +43,7 @@ aws cloudtrail lookup-events \
     --profile $ACCOUNT \
     --region us-east-1 \
     --lookup-attributes AttributeKey=EventSource,AttributeValue=ec2.amazonaws.com \
+    --lookup-attributes AttributeKey=Username,AttributeValue=$ACCOUNT \
     --start-time "$START_TIME" \
     --end-time "$END_TIME" \
     --output json > "$LOG_DIR/${ACCOUNT}_ec2_cloudtrail_events.json"
